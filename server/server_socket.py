@@ -19,7 +19,7 @@ print("Aguardando conexões no Computador A...")
 client_socket_a, client_address_a = server_socket_a.accept()
 print("Conexão estabelecida com:", client_address_a)
 
-receive_thread = threading.Thread(target=receive_messages, args=(client_address_a,))
+receive_thread = threading.Thread(target=receive_messages, args=(client_socket_a,))
 receive_thread.start()
 
 while True:

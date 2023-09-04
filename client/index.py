@@ -23,11 +23,11 @@ def receive_messages(client_socket):
         print('Recebido:', data.decode())
 
 # Socket Configs
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect((HOST, PORT))
+client_socket_b = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket_b.connect((HOST, PORT))
 
 # Thread Configs
-receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
+receive_thread = threading.Thread(target=receive_messages, args=(client_socket_b,))
 receive_thread.start()
 
 # Functions
@@ -53,7 +53,5 @@ def getUserInputResponse(text):
 # Loop
 
 while True:
-    loadOptions()
-    print(getUserInputResponse("Escolha uma opção: "))
-
-    clearScreen()
+    message = input("Digite uma mensagem: ")
+    client_socket_b.sendall(message.encode())
