@@ -12,7 +12,7 @@ HOST_A = '127.0.0.1'
 PORT_A = 443
 
 server_socket_a = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket_a.bind(HOST_A, PORT_A)
+server_socket_a.bind((HOST_A, PORT_A))
 server_socket_a.listen()
 
 print("Aguardando conexões no Computador A...")
