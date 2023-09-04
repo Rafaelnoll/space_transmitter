@@ -1,6 +1,6 @@
 import os
 import platform
-from client_socket import connect_with_server
+import rsa
 
 # Variables
 options = [
@@ -29,7 +29,21 @@ def getUserInputResponse(text):
     userResponse = input(text)
     return userResponse
         
+def generateKeys(probeName, numberOfBits = 2048):
+    (publicKey, privateKey) = rsa.newkeys(numberOfBits)
+
+    with open('{0}_public_key.pem'.format(probeName), 'wb') as publicKeyFile:
+        publicKeyFile.write(publicKey.save_pkcs1('PEM'))
+    
+    with open('{0}_private_key.pem'.format(probeName), 'wb') as privateKeyFile:
+        privateKeyFile.write(privateKey.save_pkcs1('PEM'))
 
 # Loop
 
-connect_with_server()
+while True:
+    loadOptions()
+
+    probeName = getUserInputResponse('Nome da sonda: ')
+    generateKeys(probeName)
+
+    clearScreen()
