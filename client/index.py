@@ -25,15 +25,15 @@ def loadOptions():
     for position, option in enumerate(options):
         print("{0} - {1}".format(position + 1, option))
 
-def getUserAction():
-    userResponse = input("Selecione uma opção: ")
-    print(userResponse)
+def getUserInputResponse(text):
+    userResponse = input(text)
+    return userResponse
         
 
 # Loop
 
 while True:
     loadOptions()
-    getUserAction()
+    print(getUserInputResponse("Escolha uma opção: "))
 
     clearScreen()
