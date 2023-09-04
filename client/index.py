@@ -1,5 +1,7 @@
 import os
 import platform
+import socket
+import threading
 
 # Variables
 options = [
@@ -9,6 +11,24 @@ options = [
     'Gerar Assinatura dos dados Coletados',
     'Enviar para a terra os dados'
 ]
+
+HOST = '127.0.0.1'
+PORT = 443
+
+def receive_messages(client_socket):
+    while True:
+        data = client_socket.recv(1024)
+        if not data:
+            break
+        print('Recebido:', data.decode())
+
+# Socket Configs
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((HOST, PORT))
+
+# Thread Configs
+receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
+receive_thread.start()
 
 # Functions
 
