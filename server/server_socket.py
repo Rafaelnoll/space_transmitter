@@ -1,29 +1,36 @@
 import socket
-import threading
+import tqdm
+import os
 
-def receive_messages(client_socket):
+server_host = "127.0.0.1"
+server_port = 443
+
+BUFFER_SIZE = 1024
+SEPARATOR = "<SEPARATOR>"
+
+# Establish connection
+tcp_socket = socket.socket()
+tcp_socket.bind((server_host, server_port))
+tcp_socket.listen()
+print(f"Aguardando conexões para {server_host}:{server_port}")
+client_socket, address = tcp_socket.accept()
+print(f"{address} foi conectado")
+
+# Receive file information
+received = client_socket.recv(BUFFER_SIZE).decode()
+filename, filesize = received.split(SEPARATOR)
+filename = os.path.basename(filename)
+filesize = int(filesize)
+
+# Receive and write file
+progress = tqdm.tqdm(range(filesize), f"Recebendo: {filename}", unit="B", unit_scale=True, unit_divisor=256)
+with open(filename, "wb") as file:
     while True:
-        data = client_socket.recv(1024)
-        if not data:
+        bytes_read = client_socket.recv(BUFFER_SIZE)
+        if not bytes_read:
             break
-        print("Recebido:", data.decode())
+        file.write(bytes_read)
+        progress.update(len(bytes_read))
 
-HOST_A = '127.0.0.1'
-PORT_A = 443
-
-server_socket_a = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket_a.bind((HOST_A, PORT_A))
-server_socket_a.listen()
-
-print("Aguardando conexões no Computador A...")
-client_socket_a, client_address_a = server_socket_a.accept()
-print("Conexão estabelecida com:", client_address_a)
-
-receive_thread = threading.Thread(target=receive_messages, args=(client_socket_a,))
-receive_thread.start()
-
-while True:
-    message = input("Digite uma mensagem para enviar ao Computador B:")
-    client_socket_a.sendall(message.encode())
-
-server_socket_a.close()
+client_socket.close()
+tcp_socket.close()

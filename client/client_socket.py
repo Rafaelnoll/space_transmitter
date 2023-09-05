@@ -1,25 +1,31 @@
 import socket
-import threading
+import tqdm
+import os
 
-HOST = '127.0.0.1'
-PORT = 443
+SEPARATOR = "<SEPARATOR>"
+BUFFER_SIZE = 1024
 
-def receive_messages(client_socket):
+host = "127.0.0.1"
+port = 443
+
+# File or path to file
+filename = "test.txt"
+filesize = os.path.getsize(filename)
+
+# Establish connection
+tcp_socket = socket.socket()
+print(f"Conectando com {host}:{port}")
+tcp_socket.connect((host, port))
+tcp_socket.send(f"{filename}{SEPARATOR}{filesize}".encode())
+
+# File is sent (with progress bar)
+progress = tqdm.tqdm(range(filesize), f"Enviando: {filename}", unit="B", unit_scale=True, unit_divisor=256)
+with open(filename, "rb") as file:
     while True:
-        data = client_socket.recv(1024)
-        if not data:
+        bytes_read = file.read(BUFFER_SIZE)
+        if not bytes_read:
             break
-        print('Recebido:', data.decode())
+        tcp_socket.sendall(bytes_read)
+        progress.update(len(bytes_read))
 
-# Socket Configs
-client_socket_b = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket_b.connect((HOST, PORT))
-
-# Thread Configs
-receive_thread = threading.Thread(target=receive_messages, args=(client_socket_b,))
-receive_thread.start()
-
-def connect_with_server():
-    while True:
-        message = input("Digite uma mensagem: ")
-        client_socket_b.sendall(message.encode())
+tcp_socket.close()
