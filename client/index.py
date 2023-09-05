@@ -38,12 +38,20 @@ def generateKeys(probeName, numberOfBits = 2048):
     with open('{0}_private_key.pem'.format(probeName), 'wb') as privateKeyFile:
         privateKeyFile.write(privateKey.save_pkcs1('PEM'))
 
+def handleAction(actionNumber):
+    match actionNumber:
+        case '1':
+            probeName = getUserInputResponse('Nome da sonda: ')
+            print('Gerando chaves da sonda...')
+            generateKeys(probeName)
+        case _:
+            print('Esta ação não existe')
 # Loop
 
 while True:
     loadOptions()
-
-    probeName = getUserInputResponse('Nome da sonda: ')
-    generateKeys(probeName)
+    
+    actionNumber = getUserInputResponse('Escolha uma ação: ')
+    handleAction(actionNumber)
 
     clearScreen()
