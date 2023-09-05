@@ -1,6 +1,7 @@
 import os
 import platform
 import rsa
+import time
 
 # Variables
 options = [
@@ -25,10 +26,20 @@ def loadOptions():
     for position, option in enumerate(options):
         print("{0} - {1}".format(position + 1, option))
 
+def wait(seconds):
+    time.sleep(seconds)
+
 def getUserInputResponse(text):
-    userResponse = input(text)
-    return userResponse
+    while True:
+        userResponse = input(text)
+
+        if(userResponse):
+            return userResponse
         
+        text = 'Opção inválida, tente novamente: '
+        clearScreen()
+        loadOptions()
+
 def generateKeys(probeName, numberOfBits = 2048):
     (publicKey, privateKey) = rsa.newkeys(numberOfBits)
 
@@ -45,13 +56,15 @@ def handleAction(actionNumber):
             print('Gerando chaves da sonda...')
             generateKeys(probeName)
         case _:
-            print('Esta ação não existe')
+            print('Esta ação não existe!')
 # Loop
 
 while True:
+    clearScreen()
     loadOptions()
     
     actionNumber = getUserInputResponse('Escolha uma ação: ')
     handleAction(actionNumber)
+    wait(1)
 
     clearScreen()
