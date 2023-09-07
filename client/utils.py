@@ -40,3 +40,29 @@ def generateKeys(probeName, numberOfBits = 2048, currentKeys = {}):
     with open('{0}_private_key.pem'.format(probeName), 'wb') as privateKeyFile:
         privateKeyFile.write(privateKey.save_pkcs1('PEM'))
         currentKeys['private'] = '{0}_private_key.pem'.format(probeName)
+
+def colectProbeData():
+    local = input("Local: ")
+    temperature = input("Temperatura: ")
+    radAlfa = input("Radiação Alfa: ")
+    radBeta = input("Radiação Beta: ")
+    radGama = input("Radiação Gama: ")
+
+    linesToWrite = [
+            f'Local: {local}\n',
+            f"Temperatura: {temperature}\n",
+            f"Radiação Alfa: {radAlfa}\n",
+            f"Radiação Beta: {radBeta}\n",
+            f"Radiação Gama: {radGama}\n",
+    ]
+
+    dataFile = open("probeData.txt", 'w')
+
+    dataFile.writelines(linesToWrite)
+
+    dataFile.close()
+        
+
+        
+
+    

@@ -1,5 +1,5 @@
 from client_socket import send_public_key
-from utils import getUserInputResponse, generateKeys, clearScreen, loadOptions, wait
+from utils import getUserInputResponse, generateKeys, clearScreen, loadOptions, wait, colectProbeData
 
 options = [
     'Cadastrar Sonda e Gerar Par de Chaves',
@@ -22,6 +22,8 @@ def handleAction(actionNumber):
             generateKeys(probeName.lower(), currentKeys=probeCurrentKeys)
         case '2':
             send_public_key(probeCurrentKeys['public'])
+        case '3':
+            colectProbeData()
         case _:
             print('Esta ação não existe!')
 
