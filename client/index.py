@@ -14,6 +14,11 @@ options = [
     'Enviar para a terra os dados'
 ]
 
+probeCurrentKeys = {
+    'public': '',
+    'private': '',
+}
+
 # Functions
 def clearScreen():
     systemOS = platform.system()
@@ -47,9 +52,11 @@ def generateKeys(probeName, numberOfBits = 2048):
 
     with open('{0}_public_key.pem'.format(probeName), 'wb') as publicKeyFile:
         publicKeyFile.write(publicKey.save_pkcs1('PEM'))
+        probeCurrentKeys['public'] = '{0}_public_key.pem'.format(probeName)
     
     with open('{0}_private_key.pem'.format(probeName), 'wb') as privateKeyFile:
         privateKeyFile.write(privateKey.save_pkcs1('PEM'))
+        probeCurrentKeys['private'] = '{0}_private_key.pem'.format(probeName)
 
 def handleAction(actionNumber):
     match actionNumber:
@@ -58,7 +65,7 @@ def handleAction(actionNumber):
             print('Gerando chaves da sonda...')
             generateKeys(probeName.lower())
         case '2':
-            send_public_key('teste.txt')
+            send_public_key(probeCurrentKeys['public'])
         case _:
             print('Esta ação não existe!')
 # Loop
