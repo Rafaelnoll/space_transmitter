@@ -3,6 +3,8 @@ import platform
 import rsa
 import time
 
+from client_socket import send_public_key
+
 # Variables
 options = [
     'Cadastrar Sonda e Gerar Par de Chaves',
@@ -55,6 +57,8 @@ def handleAction(actionNumber):
             probeName = getUserInputResponse('Nome da sonda: ')
             print('Gerando chaves da sonda...')
             generateKeys(probeName)
+        case '2':
+            send_public_key('teste.txt')
         case _:
             print('Esta ação não existe!')
 # Loop
