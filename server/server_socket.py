@@ -27,7 +27,7 @@ while True:
 
         # Receive and write file
         progress = tqdm.tqdm(range(filesize), f"Recebendo: {filename}", unit="B", unit_scale=True, unit_divisor=256)
-        with open("{0}-server".format(filename), "wb") as file:
+        with open("SERVER-{0}".format(filename), "wb") as file:
             while True:
                 bytes_read = client_socket.recv(BUFFER_SIZE)
                 if not bytes_read:
