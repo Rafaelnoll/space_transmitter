@@ -56,7 +56,7 @@ def handleAction(actionNumber):
         case '1':
             probeName = getUserInputResponse('Nome da sonda: ')
             print('Gerando chaves da sonda...')
-            generateKeys(probeName)
+            generateKeys(probeName.lower())
         case '2':
             send_public_key('teste.txt')
         case _:
