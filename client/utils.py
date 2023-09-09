@@ -2,6 +2,7 @@ import os
 import platform
 import rsa
 import time
+from datetime import date
 
 def clearScreen():
     systemOS = platform.system()
@@ -47,6 +48,7 @@ def colectProbeData():
     radAlfa = input("Radiação Alfa: ")
     radBeta = input("Radiação Beta: ")
     radGama = input("Radiação Gama: ")
+    creationDate = date.today().strftime("%d.%m")
 
     linesToWrite = [
             f'Local: {local}\n',
@@ -56,7 +58,7 @@ def colectProbeData():
             f"Radiação Gama: {radGama}\n",
     ]
 
-    dataFile = open("probeData.txt", 'w')
+    dataFile = open("{0}{1}.txt".format(local.lower(), creationDate), 'w')
 
     dataFile.writelines(linesToWrite)
 
