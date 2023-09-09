@@ -3,6 +3,11 @@ import platform
 import rsa
 import time
 from datetime import date
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+
+key = get_random_bytes(16)
+cipher = AES.new(key, AES.MODE_EAX)
 
 def clearScreen():
     systemOS = platform.system()
@@ -64,7 +69,17 @@ def colectProbeData():
 
     dataFile.close()
         
+def encryptFile(fileName):
+    try:
+        with open(fileName, 'rb') as file:
+            plaintext = file.read()
 
+        ciphertext, tag = cipher.encrypt_and_digest(plaintext)
+
+        with open('Encrypted_{0}'.format(fileName), 'wb') as encrypted_file:
+            encrypted_file.write(cipher.nonce)
+            encrypted_file.write(tag)
+            encrypted_file.write(ciphertext)
+    except:
+        print('Erro ao criptografar arquivo!')
         
-
-    
