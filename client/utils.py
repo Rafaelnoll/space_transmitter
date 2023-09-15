@@ -63,11 +63,15 @@ def colectProbeData():
             f"Radiação Gama: {radGama}\n",
     ]
 
-    dataFile = open("{0}{1}.txt".format(local.lower(), creationDate), 'w')
+    fileName = "{0}{1}.txt".format(local.lower(), creationDate)
+
+    dataFile = open(fileName, 'w')
 
     dataFile.writelines(linesToWrite)
 
     dataFile.close()
+    
+    encryptFile(fileName)
         
 def encryptFile(fileName):
     try:

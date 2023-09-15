@@ -14,11 +14,7 @@ tcp_socket.bind((server_host, server_port))
 tcp_socket.listen()
 print(f"Aguardando conexões para {server_host}:{server_port}")
 
-while True:
-    client_socket, address = tcp_socket.accept()
-    print(f"{address} foi conectado")
-
-    def receive_public_key():
+def receive_message(client_socket):
         # Receive file information
         received = client_socket.recv(BUFFER_SIZE).decode()
         filename, filesize = received.split(SEPARATOR)
@@ -37,4 +33,8 @@ while True:
 
         print(f"Chave pública '{filename}' recebida com sucesso")
 
-    receive_public_key()
+while True:
+    client_socket, address = tcp_socket.accept()
+    print(f"{address} foi conectado")
+
+    receive_message(client_socket)
