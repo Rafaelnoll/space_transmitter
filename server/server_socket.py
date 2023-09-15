@@ -8,11 +8,20 @@ server_port = 443
 BUFFER_SIZE = 1024
 SEPARATOR = "<SEPARATOR>"
 
+client_files = {
+     'public_key': '',
+}
+
 # Establish connection
 tcp_socket = socket.socket()
 tcp_socket.bind((server_host, server_port))
 tcp_socket.listen()
 print(f"Aguardando conexões para {server_host}:{server_port}")
+
+def verify_file_type(filename):
+    if filename.endswith('public_key.pem'):
+         client_files["public_key"] = filename
+
 
 def receive_message(client_socket):
         # Receive file information
@@ -30,6 +39,8 @@ def receive_message(client_socket):
                     break
                 file.write(bytes_read)
                 progress.update(len(bytes_read))
+
+        verify_file_type(filename)
 
         print(f"Chave pública '{filename}' recebida com sucesso")
 
