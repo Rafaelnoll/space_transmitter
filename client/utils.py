@@ -80,7 +80,7 @@ def encryptFile(fileName):
 
         ciphertext, tag = cipher.encrypt_and_digest(plaintext)
 
-        with open('Encrypted_{0}'.format(fileName), 'wb') as encrypted_file:
+        with open(fileName, 'wb') as encrypted_file:
             encrypted_file.write(cipher.nonce)
             encrypted_file.write(tag)
             encrypted_file.write(ciphertext)
