@@ -41,11 +41,11 @@ def generateKeys(probeName, numberOfBits = 2048, currentKeys = {}):
 
     with open('{0}_public_key.pem'.format(probeName), 'wb') as publicKeyFile:
         publicKeyFile.write(publicKey.save_pkcs1('PEM'))
-        currentKeys['public'] = '{0}_public_key.pem'.format(probeName)
+        currentKeys['public_key'] = '{0}_public_key.pem'.format(probeName)
     
     with open('{0}_private_key.pem'.format(probeName), 'wb') as privateKeyFile:
         privateKeyFile.write(privateKey.save_pkcs1('PEM'))
-        currentKeys['private'] = '{0}_private_key.pem'.format(probeName)
+        currentKeys['private_key'] = '{0}_private_key.pem'.format(probeName)
 
 def colectProbeData():
     local = input("Local: ")
@@ -72,6 +72,8 @@ def colectProbeData():
     dataFile.close()
     
     encryptFile(fileName)
+
+    return fileName
         
 def encryptFile(fileName):
     try:
@@ -87,3 +89,17 @@ def encryptFile(fileName):
     except:
         print('Erro ao criptografar arquivo!')
         
+def file_open(file):
+    key_file = open(file, 'rb')
+    key_data = key_file.read()
+    key_file.close()
+    return key_data
+
+def create_file_signature(private_key_file, file_to_sign):
+    privateKey = rsa.PrivateKey.load_pkcs1(file_open(private_key_file))
+    file = file_open(file_to_sign)
+
+    signature = rsa.sign(file, privateKey, 'SHA-512')
+    s = open('{0}assinatura'.format(file_to_sign), 'wb')
+    s.write(signature)
+    s.close()
