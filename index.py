@@ -1,5 +1,9 @@
-from client_socket import send_public_key
-from utils import getUserInputResponse, generateKeys, clearScreen, loadOptions, wait, colectProbeData, create_file_signature
+import threading
+from server import start_server
+from client import send_public_key, getUserInputResponse, generateKeys, clearScreen, loadOptions, wait, colectProbeData, create_file_signature
+
+start_connection = threading.Thread(target=start_server)
+start_connection.start()
 
 options = [
     'Cadastrar Sonda e Gerar Par de Chaves',
