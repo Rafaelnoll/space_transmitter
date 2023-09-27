@@ -113,5 +113,9 @@ def create_file_signature(private_key_file, file_to_sign):
         s = open('{0}assinatura'.format(file_to_sign), 'wb')
         s.write(signature)
         s.close()
+
+        signature = "{0}assinatura".format(file_to_sign.lower())
+
+        return signature
     except:
         print('Erro ao criar assinatura!')

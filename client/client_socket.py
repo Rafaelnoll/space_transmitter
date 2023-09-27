@@ -8,7 +8,7 @@ BUFFER_SIZE = 1024
 host = "127.0.0.1"
 port = 443
 
-def send_public_key(filename):
+def send_file(filename):
     # File or path to file
     try:
         filesize = os.path.getsize(filename)

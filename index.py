@@ -1,6 +1,6 @@
 import threading
 from server import start_server
-from client import send_public_key, getUserInputResponse, generateKeys, clearScreen, loadOptions, wait, colectProbeData, create_file_signature
+from client import send_file, getUserInputResponse, generateKeys, clearScreen, loadOptions, wait, colectProbeData, create_file_signature
 
 start_connection = threading.Thread(target=start_server)
 start_connection.start()
@@ -17,7 +17,10 @@ currentProbeData = {
     'public_key': '',
     'private_key': '',
     'filename': '',
+    'signature' : '',
 }
+
+probeDataList = ['public_key', 'filename', 'signature']
 
 def handleAction(actionNumber):
     match actionNumber:
@@ -26,12 +29,16 @@ def handleAction(actionNumber):
             print('Gerando chaves da sonda...')
             generateKeys(probeName.lower(), currentKeys=currentProbeData)
         case '2':
-            send_public_key(currentProbeData['public_key'])
+            send_file(currentProbeData['public_key'])
         case '3':
             probeDataFileName = colectProbeData()
             currentProbeData['filename'] = probeDataFileName
         case '4':
-            create_file_signature(currentProbeData['private_key'], currentProbeData['filename'])
+            probeSignature = create_file_signature(currentProbeData['private_key'], currentProbeData['filename'])
+            currentProbeData['signature'] = probeSignature
+        case '5':
+            for data in probeDataList:
+                send_file(currentProbeData[data])
         case _:
             print('Esta ação não existe!')
 
