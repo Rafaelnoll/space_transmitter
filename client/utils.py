@@ -37,15 +37,18 @@ def getUserInputResponse(text):
         loadOptions()
 
 def generateKeys(probeName, numberOfBits = 2048, currentKeys = {}):
-    (publicKey, privateKey) = rsa.newkeys(numberOfBits)
+    try:
+        (publicKey, privateKey) = rsa.newkeys(numberOfBits)
 
-    with open('{0}_public_key.pem'.format(probeName), 'wb') as publicKeyFile:
-        publicKeyFile.write(publicKey.save_pkcs1('PEM'))
-        currentKeys['public'] = '{0}_public_key.pem'.format(probeName)
-    
-    with open('{0}_private_key.pem'.format(probeName), 'wb') as privateKeyFile:
-        privateKeyFile.write(privateKey.save_pkcs1('PEM'))
-        currentKeys['private'] = '{0}_private_key.pem'.format(probeName)
+        with open('{0}_public_key.pem'.format(probeName), 'wb') as publicKeyFile:
+            publicKeyFile.write(publicKey.save_pkcs1('PEM'))
+            currentKeys['public_key'] = '{0}_public_key.pem'.format(probeName)
+        
+        with open('{0}_private_key.pem'.format(probeName), 'wb') as privateKeyFile:
+            privateKeyFile.write(privateKey.save_pkcs1('PEM'))
+            currentKeys['private_key'] = '{0}_private_key.pem'.format(probeName)
+    except:
+        print('Erro ao gerar as chaves da sonda!')
 
 def colectProbeData():
     local = input("Local: ")
@@ -63,12 +66,21 @@ def colectProbeData():
             f"Radiação Gama: {radGama}\n",
     ]
 
-    dataFile = open("{0}{1}.txt".format(local.lower(), creationDate), 'w')
+    fileName = "{0}{1}.txt".format(local.lower(), creationDate)
 
-    dataFile.writelines(linesToWrite)
+    try:
+        dataFile = open(fileName, 'w')
 
-    dataFile.close()
+        dataFile.writelines(linesToWrite)
+
+        dataFile.close()
         
+        encryptFile(fileName)
+    except:
+        print('Erro ao criar arquivo com dados da sonda!')
+    
+    return fileName
+            
 def encryptFile(fileName):
     try:
         with open(fileName, 'rb') as file:
@@ -76,10 +88,34 @@ def encryptFile(fileName):
 
         ciphertext, tag = cipher.encrypt_and_digest(plaintext)
 
-        with open('Encrypted_{0}'.format(fileName), 'wb') as encrypted_file:
+        with open(fileName, 'wb') as encrypted_file:
             encrypted_file.write(cipher.nonce)
             encrypted_file.write(tag)
             encrypted_file.write(ciphertext)
     except:
         print('Erro ao criptografar arquivo!')
         
+def file_open(file):
+    try:
+        key_file = open(file, 'rb')
+        key_data = key_file.read()
+        key_file.close()
+        return key_data
+    except:
+        print('Erro ao abrir o arquivo!')
+
+def create_file_signature(private_key_file, file_to_sign):
+    try:
+        privateKey = rsa.PrivateKey.load_pkcs1(file_open(private_key_file))
+        file = file_open(file_to_sign)
+
+        signature = rsa.sign(file, privateKey, 'SHA-512')
+        s = open('{0}assinatura'.format(file_to_sign), 'wb')
+        s.write(signature)
+        s.close()
+
+        signature = "{0}assinatura".format(file_to_sign.lower())
+
+        return signature
+    except:
+        print('Erro ao criar assinatura!')
