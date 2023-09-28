@@ -2,7 +2,7 @@
 
 ## 🤝 Feito por:
 
-<img align="right" height="500" src="https://i.gifer.com/origin/e9/e9fdc6b65df9b969e80d5951e48f94be.gif"/>
+<img align="right" height="450" src="https://i.gifer.com/origin/e9/e9fdc6b65df9b969e80d5951e48f94be.gif"/>
 <table>
   <tr>
     <td align="center">
